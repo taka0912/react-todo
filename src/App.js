@@ -2,14 +2,13 @@ import { useState, useRef } from "react";
 import TodoList from "./TodoList";
 
 export default function App() {
-  const [todos, setTodos] = useState([
-    { id: 1, name: "Todo1", completed: false }
-  ]);
+  const [todos, setTodos] = useState([]);
 
   const todoNameRef = useRef();
 
   const handleAddTodo = () => {
     const name = todoNameRef.current.value;
+    if (name === "") return;
     setTodos((prevTodos) => {
       return [...prevTodos, { id: "1", name: name, completed: false }];
     });
@@ -23,13 +22,18 @@ export default function App() {
     setTodos(newTodos);
   };
 
+  const handleClear = () => {
+    const newTodos = todos.filter((todo) => !todo.completed);
+    setTodos(newTodos);
+  };
+
   return (
     <>
       <TodoList todos={todos} toggleTodo={toggleTodo} />
       <input type="text" ref={todoNameRef} />
       <button onClick={handleAddTodo}>タスク追加</button>
-      <button>完了したタスクの削除</button>
-      <div>残りのタスク：0</div>
+      <button onClick={handleClear}>完了したタスクの削除</button>
+      <div>残りのタスク：{todos.filter((todo) => !todo.completed).length}</div>
     </>
   );
 }
